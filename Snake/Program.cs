@@ -13,22 +13,43 @@ namespace Snake
         {
             Console.SetBufferSize(80, 25);
 
-            HorizontLine upLine = new HorizontLine(0, 78, 0, '=');
-            HorizontLine downLine = new HorizontLine(0, 78, 24, '=');
-            VerticalLine leftLine = new VerticalLine(1, 23, 0, '|');
-            VerticalLine rightLine = new VerticalLine(1, 23, 78, '|');
-
-            upLine.Drow();
-            downLine.Drow();
-            leftLine.Drow();
-            rightLine.Drow();
+            Walls walls = new Walls(79, 23);
+            walls.CreateWalls();
 
             Point p = new Point(5, 5, '*');
             Snake snake = new Snake(p, 5, Direction.RIGHT);
             snake.Drow();
 
+            // создадим еду, случайную точку.
+            FoodCreator foodCreator = new FoodCreator(78, 24, '@');
+            Point food = foodCreator.CreateFood();
+            food.Drow();
+
+
             while (true)
             {
+                if (walls.IsHit(snake.GetLastPoint()))
+                {
+                    Console.SetCursorPosition(35, 12);
+                    Console.Write("Game over!");
+                    break;
+                }
+
+                if (snake.IsHit())
+                {
+                    Console.SetCursorPosition(35, 12);
+                    Console.Write("Game over!");
+                    break;                    
+                }
+
+                if (snake.Eat(food))
+                {
+                    food = foodCreator.CreateFood();
+                    food.Drow();
+
+                    walls.SetNextLevel(snake.GetSnakeLength());
+
+                }else snake.Move();
 
                 if (Console.KeyAvailable)
                 {
@@ -36,7 +57,7 @@ namespace Snake
                     snake.GetDirection(key.Key);
                 }
                 
-                snake.Move();
+                //snake.Move();
                 snake.Drow();
 
                 Thread.Sleep(100);

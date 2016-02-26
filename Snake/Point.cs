@@ -62,5 +62,14 @@ namespace Snake
             Console.SetCursorPosition(this.x, this.y);
             Console.Write(' ');
         }
+
+        public bool IsHit(Point p)
+        {
+            if (this.x == p.x && this.y == p.y)
+            {
+                return true;
+            }
+            else return false;
+        }
     }
 }

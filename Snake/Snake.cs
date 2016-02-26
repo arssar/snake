@@ -35,6 +35,11 @@ namespace Snake
             
         }
 
+        internal Point GetLastPoint()
+        {
+            return pLine.Last();
+        }
+
         private Point GetNextPoint()
         {
             Point pLast = pLine.Last();
@@ -42,6 +47,35 @@ namespace Snake
             pNext.Move(1, direction);
 
             return pNext;
+        }
+
+        public bool Eat(Point food)
+        {
+            Point nextPoint = GetNextPoint();
+            if (nextPoint.IsHit(food))
+            {
+                food.sym = nextPoint.sym;
+                pLine.Add(food);
+
+                return true;
+            }
+            else return false;
+        }
+
+        public bool IsHit()
+        {
+            Point lastPoint = pLine.Last();
+            for(int i = 0; i < pLine.IndexOf(lastPoint); i++)
+            {
+                Point p = pLine[i];
+                if (lastPoint.IsHit(p)) return true;
+            }
+            return false;
+        }
+
+        public int GetSnakeLength()
+        {
+            return pLine.Count();
         }
 
         public void GetDirection(ConsoleKey key)
